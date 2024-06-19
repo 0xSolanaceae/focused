@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name          Focused
-// @namespace     https://www.artemive.tk/ashore
+// @namespace     https://solanaceae.xyz/
 // @icon          https://icons.iconarchive.com/icons/graphicloads/medical-health/256/eye-icon.png
 // @description   Prevent websites from knowing that you switched tabs
 // @author        Solanaceae
-// @version       1.1
+// @version       1.0
 // @match         *://*/*
 // @run-at        document-start
 // ==/UserScript==
