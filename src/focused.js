@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Focused
 // @namespace     https://solanaceae.xyz/
-// @icon          https://icons.iconarchive.com/icons/graphicloads/medical-health/256/eye-icon.png
+// @icon          https://raw.githubusercontent.com/0xSolanaceae/focused/refs/heads/main/assets/eye-icon.png
 // @description   Prevent websites from knowing that you switched tabs
 // @author        Solanaceae
 // @version       1.0
@@ -9,26 +9,42 @@
 // @run-at        document-start
 // ==/UserScript==
 
-unsafeWindow.onblur = null;
-unsafeWindow.blurred = false;
+"use strict";
 
-unsafeWindow.document.hasFocus = function () {return true;};
-unsafeWindow.window.onFocus = function () {return true;};
+(function() {
+    const preventTabSwitchDetection = () => {
+        unsafeWindow.onblur = null;
+        unsafeWindow.blurred = false;
 
-Object.defineProperty(document, "hidden", { value : false});
-Object.defineProperty(document, "mozHidden", { value : false});
-Object.defineProperty(document, "msHidden", { value : false});
-Object.defineProperty(document, "webkitHidden", { value : false});
-Object.defineProperty(document, 'visibilityState', { get: function () { return "visible"; } });
+        unsafeWindow.document.hasFocus = () => true;
+        unsafeWindow.window.onFocus = () => true;
 
-unsafeWindow.document.onvisibilitychange = undefined;
+        Object.defineProperty(document, "hidden", { value: false });
+        Object.defineProperty(document, "mozHidden", { value: false });
+        Object.defineProperty(document, "msHidden", { value: false });
+        Object.defineProperty(document, "webkitHidden", { value: false });
+        Object.defineProperty(document, 'visibilityState', { get: () => "visible" });
 
-for (event_name of ["visibilitychange",
-                    "webkitvisibilitychange",
-                    "blur", // may cause issues on some websites
-                    "mozvisibilitychange",
-                    "msvisibilitychange"]) {
-  window.addEventListener(event_name, function(event) {
-        event.stopImmediatePropagation();
-    }, true);
-}
+        unsafeWindow.document.onvisibilitychange = undefined;
+
+        const events = [
+            "visibilitychange",
+            "webkitvisibilitychange",
+            "blur", // may cause issues on some websites
+            "mozvisibilitychange",
+            "msvisibilitychange"
+        ];
+
+        events.forEach(event_name => {
+            window.addEventListener(event_name, event => {
+                event.stopImmediatePropagation();
+            }, true);
+        });
+    };
+
+    try {
+        preventTabSwitchDetection();
+    } catch (error) {
+        console.error("Failed to initialize Focused script:", error);
+    }
+})();
